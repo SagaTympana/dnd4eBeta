@@ -138,7 +138,7 @@ export class Helper {
 		return new RegExp(/@([a-z.0-9_\-]+)/gi);
 	}
 
-	static async applyEffects(arrayOfParts, rollData, actorData, powerData, weaponData = null, effectType) {
+	static async applyEffects(arrayOfParts, rollData, actorData, powerData, weaponData = null, effectType, extraDamage = []) {
 		const debug = game.settings.get("dnd4e", "debugEffectBonus") ? `D&D4e |` : ""
 		if (actorData.effects) {
 			const powerInnerData = powerData.system
@@ -362,7 +362,8 @@ export class Helper {
 					console.debug(`${debug} ${suitableKeywords.join(", ")}`);
 				}
 
-				await this._applyEffectsInternal(arrayOfParts, rollData, effectsToProcess, suitableKeywords, actorData, effectType, debug);
+				//await this._applyEffectsInternal(arrayOfParts, rollData, powerData, effectsToProcess, suitableKeywords, actorData, effectType, debug, extraDamage);
+				await this._applyEffectsInternal(arrayOfParts, rollData, effectsToProcess, suitableKeywords, actorData, effectType, debug, extraDamage);
 			}
 		}
 	}
@@ -450,12 +451,13 @@ export class Helper {
 					console.debug(`${debug} ${suitableKeywords.join(", ")}`);
 				}
 
+				//await this._applyEffectsInternal(arrayOfParts, rollData, powerData, effectsToProcess, suitableKeywords, actorData, effectType, debug);
 				await this._applyEffectsInternal(arrayOfParts, rollData, effectsToProcess, suitableKeywords, actorData, effectType, debug);
 			}
 		}
 	}
 
-	static async _applyEffectsInternal(arrayOfParts, rollData, effectsToProcess, suitableKeywords, actorData, effectType, debug) {
+	static async _applyEffectsInternal(arrayOfParts, rollData, effectsToProcess, suitableKeywords, actorData, effectType, debug, extraDamage = []) {
 		// filter out to just the relevant effects by keyword
 		const matchingEffects = effectsToProcess.filter((effect) => {
 			const keyParts = effect.key.split(".")
@@ -483,7 +485,21 @@ export class Helper {
 				const effectValueString = this.commonReplace(effect.value, actorData)
 				const effectDice = await this.rollWithErrorHandling(effectValueString, {context : effect.key})
 				const effectValue = effectDice.total
-				if (bonusType === "untyped") {
+				if (bonusType === "roll") {
+					let rollBonus = new Roll(effectValueString);
+					rollBonus.terms.forEach(term => {
+						if (term instanceof foundry.dice.terms.ParentheticalTerm) {
+							extraDamage.push(term.formula);
+						}
+						else if (term instanceof foundry.dice.terms.DiceTerm || typeof term.total === "number") {
+							let termString = "";
+							if (term.flavor) termString = `(${term.expression})[${term.flavor}]`;
+							else termString = `(${term.expression})`;
+							extraDamage.push(termString);
+						}
+					});
+				}
+				else if (bonusType === "untyped") {
 					if (newParts["untypedEffectBonus"]) {
 						newParts["untypedEffectBonus"] = newParts["untypedEffectBonus"] + effectValue
 						if (debug) {
@@ -1127,7 +1143,7 @@ export class Helper {
 		
 		tag.sort();
 		
-		if(tag.length > 0) powerDetail += `<span class="sep">♦</span><span class="keywords">${tag.join(', ')}</span>`;
+		if(tag.length > 0) powerDetail += `<span class="sep">&#10022;</span><span class="keywords">${tag.join(', ')}</span>`;
 		
 		powerDetail += `<br /><span class="action">${CONFIG.DND4E.abilityActivationTypes[chatData.actionType].label}</span> <span class="sep">&nbsp;</span>`;
 

@@ -1,6 +1,7 @@
 /* ----------------------------------------- */
-/*  Global Basics
+/*  Global Basics							 */
 /* ----------------------------------------- */
+
 .dnd4e-blast-svg{
 	content:url('../icons/ui/blast.svg');
 }
@@ -33,7 +34,6 @@
 }
 
 .dnd4e{
-	--gradient-4e:linear-gradient(90deg, #c3c2b7, #c3c2b718);
 	--background-atwill:-o-linear-gradient(45deg, #125f15, #55aa2e);
 	--background-atwill:linear-gradient(45deg, #125f15, #55aa2e);
 	--background-encounter:o-linear-gradient(45deg, #3c0000, #dc0000);
@@ -60,12 +60,6 @@
 	}
 	&.standard-form{
 		gap:0;
-	}
-	input[type="checkbox"]::before,
-	input[type="radio"]::before,
-	input[type="checkbox"]::after,
-	input[type="radio"]::after{
-		display:inline-block;
 	}
 	code:not(.block){
 		display:inline;
@@ -110,7 +104,7 @@
 		background:var(--background-other);
 	}
 	.force-ability-usage--other{
-		background:var(--background-other)!important;
+		background:var(--background-other) !important;
 	}
 	.ability-usage--item{
 		background:var(--background-item);
@@ -133,7 +127,6 @@
 		top:2px;
 	}
 }
-
 .sheet.standard-form{
 	gap:0;
 	.window-content,
@@ -142,17 +135,18 @@
 		gap:0;
 	}
 }
-
-body.theme-dark .dnd4e:is(.default,.standard-form){
+.themed.theme-dark,
+.themed.theme-dark application.dnd4e:is(.default,.standard-form){
+	--background:#221d21;
+	--gradient-4e:linear-gradient(90deg,#494949,#00000000);
 	--border-engraved:2px groove #000;
 	--border-heavy:3px solid #453832;
 	--border-medium:2px solid #453832;
 	--border-normal:1px solid #453832;
 	--border-faint:1px solid #453832;
-	--background:#221d21;
-	--color-form-hint:var(--color-text-subtle);
 	--white-svg-filter:brightness(0) saturate(100%) invert(91%) sepia(17%) saturate(207%) hue-rotate(345deg) brightness(103%) contrast(87%);
 	--automath-brightness:1;
+	--color-form-hint:var(--color-text-subtle);
 	--input-background-color:var(--color-cool-4);
 	--input-border-color:var(--border-faint);
 	--input-box-shadow:none;
@@ -176,18 +170,21 @@ body.theme-dark .dnd4e:is(.default,.standard-form){
 		--checkbox-checkmark-color:#fff;
 	}
 }
-body.theme-light .dnd4e:is(.default,.standard-form){
+.themed.theme-light,
+.themed.theme-light application.dnd4e:is(.default,.standard-form){
+	--background:url('../../../../ui/parchment.jpg') repeat;
+	--gradient-4e:linear-gradient(90deg,#c3c2b7,#c3c2b718);
 	--border-engraved:2px groove #fff;
 	--border-heavy:3px solid var(--color-text-subtle);
 	--border-medium:2px solid var(--color-text-subtle);
 	--border-normal:1px solid var(--color-text-subtle);
 	--border-faint:1px solid #c3b3ae;
+	--white-svg-filter:brightness(0) saturate(100%) invert(9%) sepia(1%) saturate(0%) hue-rotate(147deg) brightness(99%) contrast(89%);
+	--automath-brightness:0.1;
 	--color-form-hint:var(--color-text-subtle);
 	--color-bg-btn-minor-inactive:rgba(255,255,255,0);
 	--color-bg-btn-minor-active:rgba(0,0,0,0.05);
 	--color-bg-option:unset;
-	--white-svg-filter:brightness(0) saturate(100%) invert(9%) sepia(1%) saturate(0%) hue-rotate(147deg) brightness(99%) contrast(89%);
-	--automath-brightness:0.1;
 	--input-background-color:rgba(0,0,0,0.05);
 	--input-border-color:#c3b3ae;
 	--input-box-shadow:none;
@@ -214,7 +211,7 @@ body.theme-light .dnd4e:is(.default,.standard-form){
 
 
 /* ----------------------------------------- */
-/*  Sheets
+/*  Sheets									 */
 /* ----------------------------------------- */
 
 /* ------------ Sheet Dimensions ---------- */
@@ -229,7 +226,6 @@ body.theme-light .dnd4e:is(.default,.standard-form){
 /* ------------ All Sheets ---------- */
 .dnd4e:is(.default,.standard-form) .window-content{
 	--input-height:2em;
-	--checkbox-size:1.75rem;
 	
 	fieldset{
 		padding:0.5em 1em 1em;
@@ -431,14 +427,6 @@ body.theme-light .dnd4e:is(.default,.standard-form){
 			&.inline::before{
 				text-align:right;
 				margin-right:0.35em;
-			}
-			&.checkbox{
-				font-size:1em;
-				
-				>input[type='checkbox'],
-				>input[type='radio']{
-					--checkbox-size:1.2rem;
-				}
 			}
 		}			
 		&.wide label{
@@ -925,11 +913,6 @@ body.theme-light .dnd4e:is(.default,.standard-form){
 	}
 	.sheet-navigation .item.active{
 		border-bottom:var(--border-heavy);
-	}
-	input[type="checkbox"]{
-        line-height:1;
-        margin:0;
-		height:fit-content;
 	}
 	prose-mirror.active{
 		min-height:20em;
@@ -2743,6 +2726,9 @@ body.theme-light .dnd4e:is(.default,.standard-form){
 				grid-template-columns: 2fr 6fr 1rem;
 			}
 		}
+		ol.statuses-list{
+			display:block;
+		}
 		ol.statuses-list li{
 			display:grid;
 			grid-template-columns:2fr 5fr 1rem;
@@ -2899,7 +2885,7 @@ body.theme-light .dnd4e:is(.default,.standard-form){
 			font-size:x-large;
 			margin-bottom:0;
 		}
-	}*/
+	} */
 	h1.form-title{
 		font-size:medium;
 		padding:0;
@@ -3399,6 +3385,9 @@ input[type="text"].dice-count{
 	&:is(.consumable-card,.loot-card,.equipment-card,.weapon-card,.backpack-card,.tool-card) .card-header{
 		background:var(--background-item);
 	}
+	&.collapsed>:not(header.card-header){
+		display:none;
+	}
 }
 
 .dnd4e .card-content{
@@ -3434,6 +3423,9 @@ input[type="text"].dice-count{
 	.item-description{
 		padding:1px 3px;
 		margin:0;
+	}
+	.flavour{
+		font-style:italic;
 	}
 	.item-details .action+.range-type{
 		padding-left:1em;
@@ -3517,71 +3509,104 @@ input[type="text"].dice-count{
 /* Chat Messages
 /* ----------------------------------------- */
 
-.flavor-text:is(.critical,.fumble,.probable-hit,.probable-miss){
-	font-weight:bold;
+.chat-log{
+	--gradient-4e:linear-gradient(90deg,#c3c2b7,#c3c2b718);
+	--border-faint:1px solid #c3b3ae;	
+	--item-piles-text-light-highlight:var(--table-row-color-even);
 }
-:is(.roll-expression,.roll-formula).roll-highlight{
-	background-color:#99ccff;
+.chat-log.themed.theme-dark,
+.chat-log.themed.theme-dark .chat-message{
+	--chat-message-background:#221d21;
 }
+.chat-log.themed.theme-light,
+.chat-log.themed.theme-light .chat-message{
+	--chat-message-background:url('../../../ui/parchment.jpg') repeat;
+}
+.chat-message{
+    background:var(--chat-message-background);
+    border:2px solid var(--chat-message-border-color);
+    color:var(--color-text-primary);
 
-.dice-roll{
-	.dice-tooltip{ 
-		display:block;
-		transition:grid-template-rows 250ms ease;
+	.message-header{
+		color:var(--color-text-secondary);
 	}
-	.dice-total.success{
-		color:var(--color-text-good);
-		background:#c7d0c0;
-		border:1px solid #006c00;
-	}
-	.dice-total.failure{
-		color:var(--color-text-bad);
-		background:#ffdddd;
-		border:1px solid #6e0000;
-	}
-	.dice-total.critical{
-		color:var(--color-text-good);
-	}
-	.dice-total.fumble{
-		color:var(--color-text-bad);
-	}
-	.hit-prediction.immune{
-		text-align:center;
-		line-height:24px;
-		margin-top:3px;
-		background:rgba(0, 0, 0, 0.1);
-		border:1px solid var(--color-border-light-2);
-		border-radius:3px;
-		box-shadow:0 0 2px #fff inset;
-	}
-	.hit-prediction.fumble,
-	.dice-roll .hit-prediction.miss{
-		color:var(--color-text-bad);
-	}
-	.hit-prediction.critical,
-	.hit-prediction.hit{
-		color:var(--color-text-good)
-	}
-}
-
-.dot-report{
-	.damage-taken{
+	.flavor-text:is(.critical,.fumble,.probable-hit,.probable-miss){
 		font-weight:bold;
 	}
-	.damage-taken:not(.resistant-full,.healing){
-		color:var(--color-text-bad);
+	:is(.roll-expression,.roll-formula).roll-highlight{
+		background-color:#99ccff;
 	}
-	.damage-taken.resistant-full,
-	.damage-taken.healing{
-		color:var(--color-text-good);
+	.dice-roll{
+		.dice-tooltip{ 
+			transition:grid-template-rows 250ms ease;
+		}
+		.dice-total.success{
+			color:var(--color-text-good);
+			background:var(--button-background-color);
+			border:1px solid #006c00;
+		}
+		.dice-total.failure{
+			color:var(--color-text-bad);
+			background:var(--button-background-color);
+			border:1px solid #6e0000;
+		}
+		.dice-total.critical{
+			color:var(--color-text-good);
+		}
+		.dice-total.fumble{
+			color:var(--color-text-bad);
+		}
+		.hit-prediction.immune{
+			text-align:center;
+			line-height:24px;
+			margin-top:3px;
+			background:rgba(0, 0, 0, 0.1);
+			border:1px solid var(--color-border-light-2);
+			border-radius:3px;
+			box-shadow:0 0 2px #fff inset;
+		}
+		.hit-prediction.fumble,
+		.dice-roll .hit-prediction.miss{
+			color:var(--color-text-bad);
+		}
+		.hit-prediction.critical,
+		.hit-prediction.hit{
+			color:var(--color-text-good)
+		}
+		&.expanded{
+			.dice-tooltip{
+				display:block;
+			}
+		}
+		&:not(.expanded){
+			.dice-tooltip{
+				display:none;
+			}
+		}
+	}
+	.table-draw{
+		color:inherit;
+		.table-description{
+			color:inherit;
+		}
+	}
+	.dot-report{
+		.damage-taken{
+			font-weight:bold;
+		}
+		.damage-taken:not(.resistant-full,.healing){
+			color:var(--color-text-bad);
+		}
+		.damage-taken.resistant-full,
+		.damage-taken.healing{
+			color:var(--color-text-good);
+		}
 	}
 }
 
-
-
 @media (prefers-reduced-transparency){
-    body.theme-dark .application,
-	body.theme-dark.application{
+	.themed.theme-dark,
+	.themed.theme-dark application.dnd4e:is(.default,.standard-form){
         --background:#221d21;
     }
 }
