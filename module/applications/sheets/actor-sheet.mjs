@@ -81,6 +81,7 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 			actionPointExtra: ActorSheet4e.#onActionPointExtraDialog,
 			shortRest: ActorSheet4e.#onShortRest,
 			longRest: ActorSheet4e.#onLongRest,
+			extendedRest: ActorSheet4e.#onExtendedRest,
 			deathSave: ActorSheet4e.#onDeathSave,
 			savingThrow: ActorSheet4e.#onSavingThrow,
 			rollInitiative: ActorSheet4e.#onrollInitiative,
@@ -1497,17 +1498,22 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 	}
 	
 	/* -------------------------------------------- */
+
+	static #onLongRest(event, target) {
+		foundry.utils.logCompatibilityWarning("Use of ActorSheet4e.#onLongRest has been deprecated in favor of #onExtendedRest");
+		ActorSheet4e.#onExtendedRest(event, target);
+	}
   
 	/**
 	*Opens dialog window to long rest.
 	*reset HP, surges, encounter powers, daily powers, magic item use, actions points set to default.
 	*/
-	static #onLongRest(event, target) {
+	static #onExtendedRest(event, target) {
 		if (!this.actor.isOwner) return;
 		event.preventDefault();
 		const isFF = utils.isRollFastForwarded(event);
 		if (isFF) {
-			return this.actor.longRest(event, { isFF });
+			return this.actor.extendedRest(event, { isFF });
 		}
 		new apps.LongRestDialog(this.actor).render(true);
 	}

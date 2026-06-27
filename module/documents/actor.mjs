@@ -179,81 +179,84 @@ export default class Actor4e extends Actor {
 	getRollData() {
 		const data = super.getRollData();
 
-		data.name = this.name;
+		if (this.type !== "Party") {
+			data.name = this.name;
 
-		data.strMod = data?.abilities?.str.mod || 0;
-		data.conMod = data?.abilities?.con.mod || 0;
-		data.dexMod = data?.abilities?.dex.mod || 0;
-		data.intMod = data?.abilities?.int.mod || 0;
-		data.wisMod = data?.abilities?.wis.mod || 0;
-		data.chaMod = data?.abilities?.cha.mod || 0;
+			data.strMod = data?.abilities?.str.mod || 0;
+			data.conMod = data?.abilities?.con.mod || 0;
+			data.dexMod = data?.abilities?.dex.mod || 0;
+			data.intMod = data?.abilities?.int.mod || 0;
+			data.wisMod = data?.abilities?.wis.mod || 0;
+			data.chaMod = data?.abilities?.cha.mod || 0;
 
-		data.lvhalf = Math.floor(data.details.level / 2) || 0;
-		data.lv = data?.details.level || 0;
-		data.tier = data?.details.tier || 0;
+			data.lvhalf = Math.floor(data.details.level / 2) || 0;
+			data.lv = data?.details.level || 0;
+			data.tier = data?.details.tier || 0;
 
-		data.heroic = data?.details.level < 11 ? 1 : 0;
-		data.paragon = (data?.details.level >= 11) && (data.details.level < 21) ? 1 : 0;
-		data.epic = data?.details.level >= 21 ? 1 : 0;
+			data.heroic = data?.details.level < 11 ? 1 : 0;
+			data.paragon = (data?.details.level >= 11) && (data.details.level < 21) ? 1 : 0;
+			data.epic = data?.details.level >= 21 ? 1 : 0;
 
-		data.heroicOrParagon = data?.details.level < 21 ? 1 : 0;
-		data.paragonOrEpic = data?.details.level >= 11 ? 1 : 0;
+			data.heroicOrParagon = data?.details.level < 21 ? 1 : 0;
+			data.paragonOrEpic = data?.details.level >= 11 ? 1 : 0;
 
-		data.bloodied = data.details.isBloodied ? 1 : 0;
+			data.bloodied = data.details.isBloodied ? 1 : 0;
 
-		data.sneak = CONFIG.DND4E.SNEAKSCALE[data.details.tier];
+			data.sneak = CONFIG.DND4E.SNEAKSCALE[data.details.tier];
 			
-		data.enhArmour = data.defences.ac.enhance || 0;
-		data.enhNAD = Math.min(data.defences.fort.enhance || 0, data.defences.ref.enhance || 0, data.defences.wil.enhance || 0);
+			data.enhArmour = data.defences.ac.enhance || 0;
+			data.enhNAD = Math.min(data.defences.fort.enhance || 0, data.defences.ref.enhance || 0, data.defences.wil.enhance || 0);
 
-		data.charaID = this.id;
-		data.charaUID = this.uuid;
+			data.charaID = this.id;
+			data.charaUID = this.uuid;
 
-		// this is done at the bottom, because I don't want to be iterating the entire actor effects collection unless I have to
-		// as this could get unnecessarily expensive quickly.
-		// Depth > 0 check is here to prevent an infinite recursion situation as this will call to common replace in case the variable uses a formula
-		// having got to the bottom of common replace, check to see if there are any more @variables left.	If there aren't, then don't bother going any further
-		let effects = Array.from(this.appliedEffects);
-		if (effects.length) {
-			const debug = game.settings.get("dnd4e", "debugEffectBonus") ? "D&D4e |" : "";
-			const resultObject = {};
-			const enabledEffects = effects.filter((effect) => effect?.disabled === false);
-			enabledEffects.forEach((effect) => {
-				effect.changes.forEach((change => {
-					if (utils.variableRegex.test(change.key)) {
-						if (debug) {
-							console.log(`${debug} Found custom variable ${change.key} in effect ${effect.name}.	Value: ${change.value}`);
-						}
-						const changeValueReplaced = Roll.replaceFormulaData(String(change.value), this.system, { recursive: true }); // set depth to avoid infinite recursion
-						if (!resultObject[change.key]) {
-							resultObject[change.key] = changeValueReplaced;
+			// this is done at the bottom, because I don't want to be iterating the entire actor effects collection unless I have to
+			// as this could get unnecessarily expensive quickly.
+			// Depth > 0 check is here to prevent an infinite recursion situation as this will call to common replace in case the variable uses a formula
+			// having got to the bottom of common replace, check to see if there are any more @variables left.	If there aren't, then don't bother going any further
+			let effects = Array.from(this.appliedEffects);
+			if (effects.length) {
+				const debug = game.settings.get("dnd4e", "debugEffectBonus") ? "D&D4e |" : "";
+				const resultObject = {};
+				const enabledEffects = effects.filter((effect) => effect?.disabled === false);
+				enabledEffects.forEach((effect) => {
+					effect.changes.forEach((change => {
+						if (utils.variableRegex.test(change.key)) {
 							if (debug) {
-								console.log(`${debug} Effect: ${effect.name}.	Computed Value: ${change.value} was the first match to ${change.key} `);
+								console.log(`${debug} Found custom variable ${change.key} in effect ${effect.name}.	Value: ${change.value}`);
+							}
+							const changeValueReplaced = Roll.replaceFormulaData(String(change.value), this.system, { recursive: true }); // set depth to avoid infinite recursion
+							if (!resultObject[change.key]) {
+								resultObject[change.key] = changeValueReplaced;
+								if (debug) {
+									console.log(`${debug} Effect: ${effect.name}.	Computed Value: ${change.value} was the first match to ${change.key} `);
+								}
+							}
+							else {
+								if (debug) {
+									console.log(`${debug} Effect: ${effect.name}. Computed Value: ${change.value} was an additional match to ${change.key} adding to previous`);
+								}
+								if (utils.isNumber(resultObject[change.key]) && utils.isNumber(changeValueReplaced)) {
+									resultObject[change.key] = Number(resultObject[change.key]) + Number(changeValueReplaced);
+								} else {
+									resultObject[change.key] = `${resultObject[change.key]} + ${changeValueReplaced}`;
+								}
 							}
 						}
-						else {
-							if (debug) {
-								console.log(`${debug} Effect: ${effect.name}. Computed Value: ${change.value} was an additional match to ${change.key} adding to previous`);
-							}
-							if (utils.isNumber(resultObject[change.key]) && utils.isNumber(changeValueReplaced)) {
-								resultObject[change.key] = Number(resultObject[change.key]) + Number(changeValueReplaced);
-							} else {
-								resultObject[change.key] = `${resultObject[change.key]} + ${changeValueReplaced}`;
-							}
-						}
-					}
-				}));
-			});
+					}));
+				});
 
-			if (debug) {
-				console.log(`${debug} Discovered custom variable values in effects to add to rollData: ${JSON.stringify(resultObject)}`);
+				if (debug) {
+					console.log(`${debug} Discovered custom variable values in effects to add to rollData: ${JSON.stringify(resultObject)}`);
+				}
+				for (const [key, value] of Object.entries(resultObject)) {
+					data[key.slice(1)] = value;
+				}
 			}
-			for (const [key, value] of Object.entries(resultObject)) {
-				data[key.slice(1)] = value;
-			}
+
+			data.isActor = true;
 		}
-
-		data.isActor = true;
+		
 		return data;
 	}
 
@@ -2147,7 +2150,7 @@ export default class Actor4e extends Actor {
 	}
 
 	// also known as the Extended Rest
-	async longRest(event, options) {
+	async extendedRest(event, options) {
 		const updateData = {};
 		
 		// Check if the Extended Rest is in a "Hospitable Environment" or an area of "Environmental Danger"
@@ -2197,8 +2200,8 @@ export default class Actor4e extends Actor {
 			ChatMessage.create({
 				user: game.user.id,
 				speaker: { actor: this, alias: this.system.name },
-				flavor: _loc("DND4E.LongRest"),
-				content: _loc("DND4E.LongRestResult", { name: this.name }),
+				flavor: _loc("DND4E.ExtendedRest"),
+				content: _loc("DND4E.ExtendedRestResult", { name: this.name }),
 			});
 		
 			for (let r of Object.entries(this.system.resources)) {

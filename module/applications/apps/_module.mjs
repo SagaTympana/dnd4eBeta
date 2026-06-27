@@ -11,7 +11,7 @@ export { default as DeathSaveDialog } from "./death-save.mjs";
 export { default as EncumbranceDialog } from "./encumbrance-dialog.mjs";
 export { default as HealMenuDialog } from "./heal-menu-dialog.mjs";
 export { default as HPOptions } from "./hp-options.mjs";
-export { default as LongRestDialog } from "./long-rest.mjs";
+export { default as ExtendedRestDialog } from "./extended-rest.mjs";
 export { default as MovementDialog } from "./movement-dialog.mjs";
 export { default as SaveThrowDialog } from "./save-throw.mjs";
 export { default as SecondWindDialog } from "./second-wind.mjs";

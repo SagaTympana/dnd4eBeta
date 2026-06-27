@@ -1,13 +1,13 @@
 import DocumentSheet4e from "../sheets/DocumentSheet4e.mjs";
 
-export default class LongRestDialog extends DocumentSheet4e {
+export default class ExtendedRestDialog extends DocumentSheet4e {
 
 	static DEFAULT_OPTIONS = {
 		id: "long-rest",
 		classes: ["dnd4e", "actor-rest", "standard-form", "default"],
 		form: {
 			closeOnSubmit: true,
-			handler: LongRestDialog.#onSubmit,
+			handler: ExtendedRestDialog.#onSubmit,
 		},
 		position: {
 			width: 500,
@@ -21,12 +21,12 @@ export default class LongRestDialog extends DocumentSheet4e {
 	};
 	
 	get title() {
-		return `${this.document.name} - ${_loc("DND4E.LongRest")}`;
+		return `${this.document.name} - ${_loc("DND4E.ExtendedRest")}`;
 	}
 
 	static PARTS = {
-		LongRestDialog: {
-			template: "systems/dnd4e/templates/apps/long-rest.hbs",
+		ExtendedRestDialog: {
+			template: "systems/dnd4e/templates/apps/extended-rest.hbs",
 		},
 		footer: {
 			template: "templates/generic/form-footer.hbs",
@@ -39,14 +39,14 @@ export default class LongRestDialog extends DocumentSheet4e {
 		foundry.utils.mergeObject(context, {
 			system: this.document.system,
 			buttons: [
-				{ type: "submit", label: "DND4E.LongRestTake" },
+				{ type: "submit", label: "DND4E.ExtendedRestTake" },
 			],
 		});
 		return context;
 	}
 	
 	static async #onSubmit(event, form, formData) {
-		this.document.longRest(event, {
+		this.document.extendedRest(event, {
 			...this.options,
 			...{ envi: formData.object.envi },
 		});

@@ -146,7 +146,10 @@
 			},
 			"Hazard": {
 				"htmlFields": ["description"]
-			}
+			},
+            "Party": {
+                "htmlFields": ["description"]
+            }
 		},
 		"Item": {
 			"backpack": {},

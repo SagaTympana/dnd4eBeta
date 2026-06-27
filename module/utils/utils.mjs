@@ -2157,7 +2157,7 @@ const _attributeLabelCache = new Map();
  * Convert an attribute path to a human-readable label.
  * @param {string} attr							The attribute path.
  * @param {object} [options]
- * @param {Actor5e} [options.actor]	An optional reference actor.
+ * @param {Actor4e} [options.actor]	An optional reference actor.
  * @returns {string|void}
  */
 export function getHumanReadableAttributeLabel(attr, { actor } = {}) {
@@ -2201,8 +2201,8 @@ export function getHumanReadableAttributeLabel(attr, { actor } = {}) {
 
 	// Attempt to find the attribute in a data model.
 	if (!label) {
-		const { CharacterData, NPCData, VehicleData, GroupData } = DND4E.dataModels.actor;
-		for (const model of [CharacterData, NPCData, VehicleData, GroupData]) {
+		const { CharacterData, NPCData, GroupData } = CONFIG.Actor.dataModels;
+		for (const model of [CharacterData, NPCData, GroupData]) {
 			const field = model.schema.getField(attr);
 			if (field) {
 				label = field.label;

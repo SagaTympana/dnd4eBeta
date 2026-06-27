@@ -127,6 +127,7 @@ Hooks.once("init", async function() {
 		"Player Character": data.actor.CharacterData,
 		NPC: data.actor.NPCData,
 		Hazard: data.actor.HazardData,
+		Party: data.actor.PartyData,
 	};
 	CONFIG.Item.dataModels = {
 		backpack: data.item.BackpackData,
@@ -155,7 +156,6 @@ Hooks.once("init", async function() {
 
 	CONFIG.Combat.initiative.formula = "1d20 + @attributes.init.value";
 	// Register sheet application classes
-	foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
 	foundry.documents.collections.Actors.registerSheet("dnd4e", applications.sheets.ActorSheet4e, {
 		types: ["Player Character"],
 		label: _loc("SHEET.Character.Basic"),
@@ -171,17 +171,18 @@ Hooks.once("init", async function() {
 		label: _loc("SHEET.Hazard"),
 		makeDefault: true,
 	});
-
-	foundry.applications.apps.DocumentSheetConfig.unregisterSheet(RegionBehavior, "core", foundry.applications.sheets.RegionBehaviorConfig, {
-		types: ["difficultTerrain"],
+	foundry.documents.collections.Actors.registerSheet("dnd4e", applications.sheets.ActorSheet4eParty, {
+		types: ["Party"],
+		label: _loc("SHEET.Party"),
+		makeDefault: true,
 	});
+
 	foundry.applications.apps.DocumentSheetConfig.registerSheet(RegionBehavior, "dnd4e", applications.sheets.DifficultTerrainConfig, {
 		label: "DND4E.difficultTerrain.Label",
 		types: ["difficultTerrain"],
 	});
 	
 	// Setup Item Sheet
-	foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
 	foundry.documents.collections.Items.registerSheet("dnd4e", applications.sheets.ItemSheet4e, {
 		makeDefault: true,
 		label: _loc("SHEET.Item"),
