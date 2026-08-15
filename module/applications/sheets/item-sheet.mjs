@@ -67,6 +67,10 @@ export default class ItemSheet4e extends foundry.applications.api.HandlebarsAppl
 			addMacro: ItemSheet4e.#onMacroControl,
 			deleteMacro: ItemSheet4e.#onMacroControl,
 			expandMacro: ItemSheet4e.#onMacroControl,
+			behaviorCreate: ItemSheet4e.#onBehaviorAdd,
+			behaviorDelete: ItemSheet4e.#onBehaviorDelete,
+			behaviorEdit: ItemSheet4e.#onBehaviorEdit,
+			behaviorToggle: ItemSheet4e.#onBehaviorToggle,
 			// Container actions
 			itemRoll: ItemSheet4e.#onItemRoll,
 			editItem: ItemSheet4e.#onItemControl,
@@ -107,6 +111,10 @@ export default class ItemSheet4e extends foundry.applications.api.HandlebarsAppl
 			template: "systems/dnd4e/templates/items/tabs/macros.hbs",
 			scrollable: [""],
 		},
+		behaviors: {
+			template: "systems/dnd4e/templates/items/tabs/region-behaviors.hbs",
+			scrollable: [".scrollable"]
+		},
 	};
 
 	static TABS = {
@@ -143,6 +151,11 @@ export default class ItemSheet4e extends foundry.applications.api.HandlebarsAppl
 					id: "macros",
 					label: "DND4E.Macros",
 				},
+				{
+					id: "behaviors",
+					label: "DND4EUI.Behaviors",
+					condition: (item) => item.hasAreaTarget,
+				},
 			],
 			// initial: "description"
 		},
@@ -163,6 +176,18 @@ export default class ItemSheet4e extends foundry.applications.api.HandlebarsAppl
 
 	async _preparePartContext(partId, context) {
 		const partContext = await super._preparePartContext(partId, context);
+			if (partId === "behaviors") {
+				context.behaviors = this.document.behaviors?.filter(b => b.visible).map(b => ({
+					id: b.id,
+					name: b.name,
+					typeLabel: _loc(CONFIG.RegionBehavior.typeLabels[b.type]),
+					typeIcon: CONFIG.RegionBehavior.typeIcons[b.type] || "fa-regular fa-notdef",
+					disabled: b.disabled,
+					canUpdate: b.canUserModify(game.user, "update"),
+					canDelete: b.canUserModify(game.user, "delete")
+				})).sort((a, b) => (a.disabled - b.disabled) || a.name.localeCompare(b.name, game.i18n.lang));
+				context.canCreateBehavior = RegionBehavior.canUserCreate(game.user);
+			}
 		if (partId in partContext.tabs) partContext.tab = partContext.tabs[partId];
 		return partContext;
 	}
@@ -1599,4 +1624,64 @@ export default class ItemSheet4e extends foundry.applications.api.HandlebarsAppl
 	}
 
 	/* -------------------------------------------- */
+
+	/**
+	 * Create a new region behavior.
+	 * @this {ItemSheet4e}
+	 * @type {ApplicationClickAction}
+	 */
+	static async #onBehaviorAdd() {
+		await foundry.documents.RegionBehavior.implementation.createDialog({}, {parent: this.document});
+	}
+
+	/* -------------------------------------------- */
+
+	/**
+	 * Handle button clicks to delete a behavior.
+	 * @this {ItemSheet4e}
+	 * @param {PointerEvent} event
+	 */
+	static async #onBehaviorDelete(event) {
+		const behavior = this.#getControlBehavior(event);
+		await behavior.deleteDialog();
+	}
+
+	/* -------------------------------------------- */
+
+	/**
+	 * Handle button clicks to edit a behavior.
+	 * @this {ItemSheet4e}
+	 * @param {PointerEvent} event
+	 */
+	static async #onBehaviorEdit(event) {
+		const target = event.target;
+		if ( target.closest(".region-element-name") && (event.detail !== 2) ) return; // Double-click on name
+		const behavior = this.#getControlBehavior(event);
+		await behavior.sheet.render(true);
+	}
+
+	/* -------------------------------------------- */
+
+	/**
+	 * Handle button clicks to toggle a behavior.
+	 * @this {ItemSheet4e}
+	 * @param {PointerEvent} event
+	 */
+	static async #onBehaviorToggle(event) {
+		const behavior = this.#getControlBehavior(event);
+		await behavior.update({disabled: !behavior.disabled});
+	}
+
+	/* -------------------------------------------- */
+
+	/**
+	 * Get the RegionBehavior document from a control button click.
+	 * @param {PointerEvent} event    The button-click event
+	 * @returns {RegionBehavior}      The region behavior document
+	 */
+	#getControlBehavior(event) {
+		const button = event.target;
+		const li = button.closest(".region-behavior");
+		return null//this.document.behaviors.get(li.dataset.behaviorId);
+	}
 }

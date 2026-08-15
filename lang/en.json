@@ -1845,6 +1845,7 @@
 	"AutoCardTip": "<strong>ON:</strong> The chat card will be generated from the provided Details, with styling applied automatically. If no flavor text is provided, the Description text will be used in its place.<br /><strong>OFF:</strong> The chat card will only use the Description text. Styling is up to the user.",
 	"AutoFromConfig": "Automatic (from Config)",
 	"AutoFromConfigTip": "These keywords have been inferred from the power's settings. If something looks wrong, the config may need updating!",
+	"Behaviors": "Behaviors",
 	"ChatFlavor": "Flavor Text",
 	"ChatFlavorPlaceholder": "If this is not set, text from the Description tab will be used instead",
 	"ConditionalBonuses": "Conditional Modifiers",
@@ -1869,8 +1870,8 @@
 	"EffectHTMLInput": "Use Rich Text Editor?",
 	"EffectHTMLTip": "Good for complex effects",
 	"GroupBy": "Group By",
-  "Handler": "Handler",
-  "HandlerHint": "For companions, summons, and other creatures controlled by another character, this is the controlling character.",
+	"Handler": "Handler",
+	"HandlerHint": "For companions, summons, and other creatures controlled by another character, this is the controlling character.",
 	"HitDetails": "Hit Details",
 	"HitDetailsText": "Hit Text",
 	"HitEffects": "Hit Effects",
@@ -1890,8 +1891,8 @@
 	"PowerTextFieldsPlaceholder": "For Rolls and Formulae, use double square brackets: e.g. [[1d4 + @chaMod]]",
 	"RequirementsText": "Requirement Text",
 	"ResistancesTip": "Nonmagical damage resistance(s) connected to this item",
-  "RestoreLegacyStatuses": "Restore Legacy Statuses",
-  "RestoreLegacyStatusesTip": "Add back potentially extraneous conditions (like extra marks and reminders), which were removed in 0.8.11",
+	"RestoreLegacyStatuses": "Restore Legacy Statuses",
+	"RestoreLegacyStatusesTip": "Add back potentially extraneous conditions (like extra marks and reminders), which were removed in 0.8.11",
 	"RollVariants": "Variant Roll Modes",
 	"RollVariantsTip": "Adds extra context menu options to roll this attack in a special way. When rolled this way, the attack will gain the specified property and activate any associated bonuses/penalties.",
 	"SearchFor": "Search for {term}",
@@ -1913,14 +1914,14 @@
 	"TriggerText": "Trigger Text",
 	"UnknownCondition.Label": "Unknown value",
 	"UnknownCondition.Tip": "No match was found for this id in the current status conditions configuration.",
-  "NOTIFICATIONS": {
-    "ammoInsufficient": "The {resourceType} requires {quantity} of '{target}' but the character only has {ammoCount}",
-    "ammoMissing": "The {resourceType} requires ammunition, but none could be found on the character",
-    "ammoUncounted": "The {resourceType} requires ammunition, but the quantity ('{quantity}') was empty",
-    "ammoUntyped": "The {resourceType} requires ammunition, but the type ('{target}') was empty",
-    "cantAttack": "You may not make an Attack Roll with this Item.",
-    "cantDamage": "You may not make a Damage Roll with this Item."
-  },
+	"NOTIFICATIONS": {
+		"ammoInsufficient": "The {resourceType} requires {quantity} of '{target}' but the character only has {ammoCount}",
+		"ammoMissing": "The {resourceType} requires ammunition, but none could be found on the character",
+		"ammoUncounted": "The {resourceType} requires ammunition, but the quantity ('{quantity}') was empty",
+		"ammoUntyped": "The {resourceType} requires ammunition, but the type ('{target}') was empty",
+		"cantAttack": "You may not make an Attack Roll with this Item.",
+		"cantDamage": "You may not make a Damage Roll with this Item."
+	},
 	"Yes": "Yes"
 },
 
