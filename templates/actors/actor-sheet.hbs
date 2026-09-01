@@ -3,38 +3,62 @@
     {{!-- Sheet Header --}}
     <header class="sheet-header">
       <ul class="summary flexrow">
-        <li class="summary-name">
-          <input name="name" type="text" value="{{actor.name}}" data-tooltip="{{localize 'DND4E.NamePC'}}" placeholder="{{localize 'DND4E.NamePC'}}" onClick="this.select();">
+        <li class="summary-name" data-tooltip="{{localize 'DND4E.NamePC'}}">
+          {{#if isPlay}}
+          <div class="document-name">{{document.name}}</div>
+          {{else}}
+          {{formInput fields.name value=source.name placeholder=(localize "DND4E.NamePC")}}
+          {{/if}}
         </li>
-        <li class="summary-race placeholder" data-placeholder="{{localize 'DND4E.Race'}}">
-          <input type="text" name="system.details.race" value="{{system.details.race}}" data-tooltip="{{localize 'DND4E.Race'}}" placeholder="{{localize 'DND4E.Race'}}" onClick="this.select();">
+        <li class="summary-race placeholder" data-placeholder="{{localize 'DND4E.Race'}}" data-tooltip="{{localize 'DND4E.Race'}}">
+          {{#if isPlay}}
+          <div>{{system.details.race}}</div>
+          {{else}}
+          {{formInput detailsFields.race value=source.system.details.race placeholder=(localize "DND4E.Race")}}
+          {{/if}}
         </li>
-        <li class="summary-class placeholder" data-placeholder="{{localize 'DND4E.Class'}}">
-          <input type="text" name="system.details.class" value="{{system.details.class}}" data-tooltip="{{localize 'DND4E.ClassName'}}"placeholder="{{localize 'DND4E.ClassName'}}" onClick="this.select();">
+        <li class="summary-class placeholder" data-placeholder="{{localize 'DND4E.Class'}}" data-tooltip="{{localize 'DND4E.ClassName'}}">
+          {{#if isPlay}}
+          <div>{{system.details.class}}</div>
+          {{else}}
+          {{formInput detailsFields.class value=source.system.details.class placeholder=(localize "DND4E.ClassName")}}
+          {{/if}}
         </li>
         <li class="summary-level">
+          {{#if isPlay}}
+          <label>{{localize 'DND4E.Level'}}&nbsp;&nbsp;{{system.details.level}}</label>
+          {{else}}
           <label>{{localize 'DND4E.Level'}}</label>
-          <input type="text" name="system.details.level" value="{{system.details.level}}" data-tooltip="{{localize 'DND4E.Level'}}" data-dtype="Number" onClick="this.select();">
+          <a data-tooltip="{{localize "DND4E.Level"}}">{{formInput detailsFields.level value=source.system.details.level placeholder=(localize "DND4E.Level")}}</a>
+          {{/if}}
         </li>
       </ul>
 
       <ul class="summary flexrow">
         <li class="summary-path placeholder" data-placeholder="{{localize 'DND4E.Tier.ParagonPath'}}">
-          <input type="text" name="system.details.paragon" value="{{system.details.paragon}}" data-tooltip="{{localize 'DND4E.Tier.ParagonPath'}}"placeholder="{{localize 'DND4E.Tier.ParagonPath'}}" onClick="this.select();">
+          {{#if isPlay}}
+          <div data-tooltip="{{localize 'DND4E.Tier.ParagonPath'}}">{{system.details.paragon}}</div>
+          {{else}}
+          {{formInput detailsFields.paragon value=source.system.details.paragon placeholder=(localize "DND4E.Tier.ParagonPath")}}
+          {{/if}}
         </li>
         <li class="summary-path placeholder" data-placeholder="{{localize 'DND4E.Tier.EpicDestiny'}}">
-          <input type="text" name="system.details.epic" value="{{system.details.epic}}" data-tooltip="{{localize 'DND4E.Tier.EpicDestiny'}}"placeholder="{{localize 'DND4E.Tier.EpicDestiny'}}" onClick="this.select();">
+          {{#if isPlay}}
+          <div data-tooltip="{{localize 'DND4E.Tier.EpicDestiny'}}">{{system.details.epic}}</div>
+          {{else}}
+          {{formInput detailsFields.epic value=source.system.details.epic placeholder=(localize "DND4E.Tier.EpicDestiny")}}
+          {{/if}}
         </li>
         <li class="summary-exp">
           <label>{{localize 'DND4E.Exp'}}</label>
-          <input type="text" name="system.details.exp" value="{{system.details.exp}}" data-tooltip="{{localize 'DND4E.Exp'}}" data-dtype="Number" onClick="this.select();">
+          {{formInput detailsFields.exp value=source.system.details.exp placeholder=(localize "DND4E.Exp")}}
         </li>
       </ul>
     </header>
 
     <section class="header-2 flexrow">
       <div class="image-frame">
-        <img class="profile-img" src="{{actor.img}}" alt="{{actor.name}}" data-action="editImage" data-edit="img" data-tooltip="{{actor.name}}" width="100" height="100">
+        <img class="profile-img" src="{{actor.img}}" alt="{{actor.name}}" data-action="{{ifThen isPlay "showPortraitArtwork" "editImage"}}" data-edit="img" data-tooltip="{{actor.name}}" width="100" height="100">
         <a class="hover-icon actor-art" data-tooltip="{{localize 'DND4EUI.ShowImage'}}" data-action="displayActorArt"><i class="fas fa-image fa-fw"></i></a>
       </div>
       {{!-- Attributes --}}
@@ -49,9 +73,13 @@
             <input {{#if system.details.isBloodied}}class="bloodied" {{/if}}type="text" name="system.attributes.hp.value" value="{{system.attributes.hp.value}}" data-tooltip="{{localize 'DND4E.HPCurrent'}}" placeholder="Current" data-dtype="Number" onClick="this.select();"/>
             <span class="sep">/</span>
             {{#if system.attributes.hp.autototal}}
-            <input type="text" disabled name="system.attributes.hp.max" value="{{system.attributes.hp.max}}" data-tooltip="DND4E.HPTotalAuto" placeholder="Total" data-dtype="Number" onClick="this.select();">
+            <div>{{system.attributes.hp.max}}</div>
             {{else}}
-            <input type="text" name="system.attributes.hp.max" value="{{system.attributes.hp.max}}" data-tooltip="DND4E.HPTotal" placeholder="Total" data-dtype="Number" onClick="this.select();">
+            {{#if isPlay}}
+            <div>{{system.attributes.hp.max}}</div>
+            {{else}}
+            <a data-tooltip="DND4E.HPTotal">{{formInput hpFields.max value=source.system.attributes.hp.max placeholder="Total"}}</a>
+            {{/if}}
             {{/if}}
           </div>
           <footer class="attribute-footer attribute-footer--temp-hp flexrow">
@@ -87,8 +115,12 @@
             </div>
             <span class="sep">/</span>
             <div class="attribute-sub attribute-input">
-              <input type="text" name="system.details.surges.max" value="{{system.details.surges.max}}" data-tooltip="{{localize 'DND4E.SurgeDay'}}" placeholder="Total" data-dtype="Number" onClick="this.select();">
-              <div class="attribute-display" data-tooltip="{{localize 'DND4E.SurgeDay'}}">{{localize 'DND4E.Day'}}</div>
+              {{#if isPlay}}
+              <div data-tooltip="{{localize 'DND4E.SurgeDay'}}">{{system.details.surges.max}}</div>
+              {{else}}
+              {{formInput surgesFields.max value=source.system.details.surges.max placeholder=(localize "DND4E.SurgeDay") tooltip=(localize "DND4E.SurgeDay")}}
+              {{/if}}
+              <div data-tooltip="{{localize 'DND4E.SurgeDay'}}">{{localize 'DND4E.Day'}}</div>
             </div>
             <div class="attribute-sub">
               <input type="checkbox" name="system.details.secondwind" data-dtype="Boolean" {{checked system.details.secondwind}} data-tooltip="{{localize 'DND4E.SecondWindUsed'}}">
@@ -153,7 +185,11 @@
         {{else}}
         {{#each system.abilities as | ability a|}}
         <div class="ability--score flexrow" data-ability="{{a}}">
-          <input class="ability-score" name="system.abilities.{{a}}.value" type="text" data-dtype="Number" value="{{ability.value}}" onfocus="this.select()" placeholder="10">
+          {{#if @root.isPlay}}
+          <label class="ability-score">{{ability.value}}</label>
+          {{else}}
+          <input class="ability-score" name="source.system.abilities.{{a}}.value" type="text" data-dtype="Number" value="{{lookup (lookup @root.source.system.abilities a) "value"}}" onfocus="this.select()" placeholder="10">
+          {{/if}}
           <label class="ability-name rollable" data-action="rollAbilityCheck" data-tooltip="{{ability.label }}">{{ability.label}}</label>
           <label class="attribute-display ability-mod" data-tooltip="{{ability.label}}">{{numberFormat ability.mod decimals=0 sign=true}}</label>
           <label class="attribute-display ability-mod-half rollable" data-tooltip="{{ability.label }}">{{numberFormat ability.check.total decimals=0 sign=true}}</label>

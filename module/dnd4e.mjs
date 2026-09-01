@@ -41,7 +41,7 @@ Hooks.once("init", async function() {
 
 	foundry.applications.apps.DocumentSheetConfig.registerSheet(ActiveEffect, "dnd4e", applications.sheets.ActiveEffectConfig4e, {
 		makeDefault: true,
-		label: _loc("SHEET.ActiveEffect"),
+		label: _loc("SHEET.Labels.ActiveEffect"),
 	});
 
 	CONFIG.ActiveEffect.legacyTransferral = false;
@@ -143,24 +143,24 @@ Hooks.once("init", async function() {
 	foundry.documents.collections.Actors.unregisterSheet("core", foundry.appv1.sheets.ActorSheet);
 	foundry.documents.collections.Actors.registerSheet("dnd4e", applications.sheets.ActorSheet4e, {
 		types: ["Player Character"],
-		label: _loc("SHEET.Character.Basic"),
+		label: _loc("SHEET.Labels.Character.Basic"),
 		makeDefault: true,
 	});
 	foundry.documents.collections.Actors.registerSheet("dnd4e", applications.sheets.ActorSheet4eNPC, {
 		types: ["NPC"],
-		label: _loc("SHEET.NPC"),
+		label: _loc("SHEET.Labels.NPC"),
 		makeDefault: true,
 	});
 	foundry.documents.collections.Actors.registerSheet("dnd4e", applications.sheets.ActorSheet4eHazard, {
 		types: ["Hazard"],
-		label: _loc("SHEET.Hazard"),
+		label: _loc("SHEET.Labels.Hazard"),
 		makeDefault: true,
 	});
 
 	CONFIG.Token.prototypeSheetClass = applications.sheets.token.PrototypeTokenConfig4e;
 	foundry.applications.apps.DocumentSheetConfig.unregisterSheet(TokenDocument, "core", foundry.applications.sheets.TokenConfig);
 	foundry.applications.apps.DocumentSheetConfig.registerSheet(TokenDocument, "dnd4e", applications.sheets.token.TokenConfig4e, {
-		label: "SHEET.Token",
+		label: "SHEET.Labels.Token",
 	});
 
 	foundry.applications.apps.DocumentSheetConfig.unregisterSheet(RegionBehavior, "core", foundry.applications.sheets.RegionBehaviorConfig, {
@@ -175,7 +175,7 @@ Hooks.once("init", async function() {
 	foundry.documents.collections.Items.unregisterSheet("core", foundry.appv1.sheets.ItemSheet);
 	foundry.documents.collections.Items.registerSheet("dnd4e", applications.sheets.ItemSheet4e, {
 		makeDefault: true,
-		label: _loc("SHEET.Item"),
+		label: _loc("SHEET.Labels.Item"),
 		types: ["weapon", "equipment", "consumable", "tool", "loot", "ritual", "power", "feature", "backpack"],
 
 	});

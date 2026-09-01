@@ -1,27 +1,42 @@
 <section class="tab {{tab.id}}{{#if tab.active}} active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
   <section class="flexrow section--resources">
     {{!-- Custom Resources --}}
-    {{#each system.resources as |res|}}
+    {{#each system.resources as |res r|}}
     <div class="attributes resource-tracker">
+      {{#if @root.isPlay}}
+	    {{#if res.label}}
       <h4 class="resource-name">
-        <input name="system.resources.{{res.name}}.label" type="text" value="{{res.label}}"
+        <div>{{lookup (lookup @root.source.system.resources r) "label"}}</div>
+      </h4>
+      <div class="resource-value attribute-value flexrow">
+        <input name="system.resources.{{res.name}}.value" type="text" value="{{lookup (lookup @root.source.system.resources r) "value"}}" placeholder="0">
+        <span class="sep">/</span>
+        <div>{{lookup (lookup @root.source.system.resources r) "max"}}</div>
+      </div>
+      {{/if}}
+      {{else}}
+      <h4 class="resource-name">
+        <input name="system.resources.{{res.name}}.label" type="text" value="{{lookup (lookup @root.source.system.resources r) "label"}}"
           placeholder="{{res.placeholder}}">
       </h4>
       <div class="resource-value attribute-value flexrow">
-        <input name="system.resources.{{res.name}}.value" type="text" value="{{res.value}}" placeholder="0">
+        <input name="system.resources.{{res.name}}.value" type="text" value="{{lookup (lookup @root.source.system.resources r) "value"}}" placeholder="0">
         <span class="sep">/</span>
-        <input name="system.resources.{{res.name}}.max" type="text" value="{{res.max}}" placeholder="0">
+        <input name="system.resources.{{res.name}}.max" type="text" value="{{lookup (lookup @root.source.system.resources r) "max"}}" placeholder="0">
       </div>
+      {{/if}}
+      {{#if (or res.label (not @root.isPlay))}}
       <footer class="resource-footer flexrow">
         <label class="recharge checkbox">
           {{ localize 'DND4E.AbbreviationSR' }}
-          <input name="system.resources.{{res.name}}.sr" type="checkbox" {{checked res.sr}}>
+          <input name="system.resources.{{res.name}}.sr" type="checkbox" {{checked res.sr}} {{#if @root.isPlay}}disabled{{/if}}>
         </label>
         <label class="recharge checkbox">
           {{ localize 'DND4E.AbbreviationLR' }}
-          <input name="system.resources.{{res.name}}.lr" type="checkbox" {{checked res.lr}}>
+          <input name="system.resources.{{res.name}}.lr" type="checkbox" {{checked res.lr}} {{#if @root.isPlay}}disabled{{/if}}>
         </label>
       </footer>
+      {{/if}}
     </div>
     {{/each}}
   </section>
@@ -33,48 +48,80 @@
       <div class="flexcol details-fluff">
         <div class="detail gender">
           <label for="gender">{{localize 'DND4E.Gender'}}:</label>
-          <input id="gender" type="text" name="system.details.gender" value="{{system.details.gender}}" data-tooltip="{{localize 'DND4E.Gender'}}" placeholder="{{localize 'DND4E.Gender'}}" onClick="this.select();">
+          {{#if isPlay}}
+          <div class="gender" data-tooltip="{{localize 'DND4E.Gender'}}">{{document.system.details.gender}}</div>
+          {{else}}
+          {{formInput detailsFields.gender value=source.system.details.gender placeholder=(localize "DND4E.Gender")}}
+          {{/if}}
         </div>
         <div class="detail age">
           <label for="age">{{localize 'DND4E.Age'}}:</label>
-          <input id="age" type="text" name="system.details.age" value="{{system.details.age}}" data-tooltip="{{localize 'DND4E.Age'}}" placeholder="{{localize 'DND4E.Age'}}" onClick="this.select();">
+          {{#if isPlay}}
+          <div class="age" data-tooltip="{{localize 'DND4E.Age'}}">{{document.system.details.age}}</div>
+          {{else}}
+          {{formInput detailsFields.age value=source.system.details.age placeholder=(localize "DND4E.Age")}}
+          {{/if}}
         </div>
         <div class="detail alignment">
           <label for="alignment">{{localize 'DND4E.Alignment'}}:</label>
-          <input id="alignment" type="text" name="system.details.alignment" value="{{system.details.alignment}}" data-tooltip="{{localize 'DND4E.Alignment'}}" placeholder="{{localize 'DND4E.Alignment'}}" onClick="this.select();">
+          {{#if isPlay}}
+          <div class="alignment" data-tooltip="{{localize 'DND4E.Alignment'}}">{{document.system.details.alignment}}</div>
+          {{else}}
+          {{formInput detailsFields.alignment value=source.system.details.alignment placeholder=(localize "DND4E.Alignment")}}
+          {{/if}}
         </div>
         <div class="detail height">
           <label for="height">{{localize 'DND4E.Height'}}:</label>
-          <input id="height" type="text" name="system.details.height" value="{{system.details.height}}" data-tooltip="{{localize 'DND4E.Height'}}" placeholder="{{localize 'DND4E.Height'}}" onClick="this.select();">
+          {{#if isPlay}}
+          <div class="height" data-tooltip="{{localize 'DND4E.Height'}}">{{document.system.details.height}}</div>
+          {{else}}
+          {{formInput detailsFields.height value=source.system.details.height placeholder=(localize "DND4E.Height")}}
+          {{/if}}
         </div>
         <div class="detail weight">
           <label for="weight">{{localize 'DND4E.Weight'}}:</label>
-          <input id="weight" type="text" name="system.details.weight" value="{{system.details.weight}}" data-tooltip="{{localize 'DND4E.Weight'}}" placeholder="{{localize 'DND4E.Weight'}}" onClick="this.select();">
+          {{#if isPlay}}
+          <div class="weight" data-tooltip="{{localize 'DND4E.Weight'}}">{{document.system.details.weight}}</div>
+          {{else}}
+          {{formInput detailsFields.weight value=source.system.details.weight placeholder=(localize "DND4E.Weight")}}
+          {{/if}}
         </div>
       </div>
 
       <div class="flexcol details-mechanical">
         <div class="detail form-group size">
           <label>{{localize 'DND4E.Size'}}:</label>
-          <select class="actor-size" name="system.details.size">
-            {{selectOptions config.actorSizes selected=system.details.size labelAttr="label"}}
-          </select>
+          {{#if isPlay}}
+          <div class="actor-size" data-tooltip="{{localize 'DND4E.Size'}}">{{lookup (lookup config.actorSizes document.system.details.size) "label"}}</div>
+          {{else}}
+          {{formInput detailsFields.size value=source.system.details.size}}
+          {{/if}}
         </div>
         <div class="detail form-group origin">
           <label>{{localize 'DND4E.Origin.ThingOrigin' thing=(localize 'DND4E.Creature')}}:</label>
-          <select class="actor-origin" name="system.details.origin">
-            {{selectOptions config.creatureOrigin selected=system.details.origin labelAttr="label"}}
-          </select>
+          {{#if isPlay}}
+          <div class="actor-origin" data-tooltip="{{localize 'DND4E.Creature'}}">{{lookup (lookup config.creatureOrigin document.system.details.origin) "label"}}</div>
+          {{else}}
+          {{formInput detailsFields.origin value=source.system.details.origin}}
+          {{/if}}
         </div>
         <div class="detail form-group creature-type">
           <label>{{localize 'DND4E.ThingType' thing=(localize 'DND4E.Creature')}}:</label>
-          <select class="actor-type" name="system.details.type">
-            {{selectOptions config.creatureType selected=system.details.type labelAttr="label"}}
-          </select>
+          {{#if isPlay}}
+          <div class="actor-type" data-tooltip="{{localize 'DND4E.ThingType' thing=(localize 'DND4E.Creature')}}">{{lookup (lookup config.creatureType document.system.details.type) "label"}}</div>
+          {{else}}
+          {{formInput detailsFields.type value=source.system.details.type}}
+          {{/if}}
         </div>
         <div class="detail subtypes">
+          {{#if (or (not isPlay) document.system.details.other)}}
           <label for="subtypes">{{localize 'DND4E.ThingSubtypes' thing=(localize 'DND4E.Creature')}}:</label>
-          <input id="other" type="text" name="system.details.other" value="{{system.details.other}}" data-tooltip="{{localize 'DND4E.ThingSubtypes' thing=(localize 'DND4E.Creature')}}" placeholder="{{localize 'DND4E.ThingSubtypes' thing=(localize 'DND4E.Creature')}}" onClick="this.select();">
+          {{/if}}
+          {{#if (and isPlay document.system.details.other)}}
+          <div class="subtypes" data-tooltip="{{localize 'DND4E.ThingSubtypes' thing=(localize 'DND4E.Creature')}}">{{document.system.details.other}}</div>
+          {{else}}
+          {{formInput detailsFields.other value=source.system.details.other}}
+          {{/if}}
         </div>
       </div>
 
@@ -82,6 +129,44 @@
   </section>
 
   {{!-- Proficiency --}}
+  {{#if (and isPlay shouldShowProficiencies)}}
+  <div class="traits proficiencies">
+    <h4 class="group-header">{{ localize 'DND4E.Proficiencies' }}</h4>
+
+    {{#if shouldShowWeaponProf}}
+    <div class="traits-row" data-tooltip="{{ localize 'DND4E.ProficienciesVar' type=(localize 'DND4E.Weapon')}}">
+      <span class="subgroup-header label">{{ localize 'DND4E.Weapon' }}</span>
+      <ul class="traits-list proficiency weapons">
+        {{#each weaponProfs.selected as |v k|}}
+        <li class="tag {{k}}">{{v}}</li>
+        {{/each}}
+      </ul>
+    </div>
+    {{/if}}
+
+    {{#if shouldShowImplementProf}}
+    <div class="traits-row" data-tooltip="{{ localize 'DND4E.ProficienciesVar' type=(localize 'DND4E.Implement')}}">
+      <span class="subgroup-header label">{{ localize 'DND4E.Implement' }}</span>
+      <ul class="traits-list proficiency implements">
+        {{#each implementProfs.selected as |v k|}}
+        <li class="tag {{k}}">{{v}}</li>
+        {{/each}}
+      </ul>
+    </div>
+    {{/if}}
+
+    {{#if shouldShowArmourProf}}
+    <div class="traits-row" data-tooltip="{{ localize 'DND4E.ProficienciesVar' type=(localize 'DND4E.Armour')}}">
+      <span class="subgroup-header label">{{ localize 'DND4E.Armour' }}</span>
+      <ul class="traits-list proficiency armour">
+        {{#each armourProfs.selected as |v k|}}
+        <li class="tag {{k}}">{{v}}</li>
+        {{/each}}
+      </ul>
+    </div>
+    {{/if}}
+  </div>
+  {{else if (not isPlay)}}
   <div class="traits proficiencies">
     <h4 class="group-header">{{ localize 'DND4E.Proficiencies' }}</h4>
 
@@ -120,10 +205,34 @@
         {{/each}}
       </ul>
     </div>
-
   </div>
+  {{/if}}
 
   {{!-- Languages --}}
+  {{#if (and isPlay shouldShowLanguages)}}
+  <div class="traits languages">
+    <h4 class="group-header">{{ localize 'DND4E.Languages' }}</h4>
+
+    <div class="traits-row">
+      <span class="subgroup-header label">{{ localize 'DND4E.Spoken' }}</span>
+      <ul class="traits-list languages spoken">
+        {{#each languages.spoken.selected as |v k|}}
+        <li class="tag {{k}}">{{v}}</li>
+        {{/each}}
+      </ul>
+    </div>
+
+    <div class="traits-row">
+      <span class="subgroup-header label">{{ localize 'DND4E.Script' }}</span>
+      <ul class="traits-list languages script">
+        {{#each languages.script.selected as |v k|}}
+        <li class="tag {{k}}">{{v}}</li>
+        {{/each}}
+      </ul>
+    </div>
+  </div>
+
+  {{else if (not isPlay)}}
   <div class="traits languages">
     <h4 class="group-header">{{ localize 'DND4E.Languages' }}</h4>
 
@@ -150,23 +259,33 @@
         {{/each}}
       </ul>
     </div>
-
   </div>
+  {{/if}}
 
   {{!-- Senses --}}
+  {{#if (or (not isPlay) shouldShowSenses)}}
   <div class="traits senses">
     <h4 class="group-header">{{ localize 'DND4E.Senses' }}</h4>
+    {{#if (or (not isPlay) shouldShowSpecialSenses)}}
     <div class="traits-row">
-      <a class="trait-selector-senses" data-action="traitSelectorSenses" data-options="senses" data-target="system.senses.special" data-app-title="{{ localize 'DND4E.Senses' }}">
+      {{#if (not isPlay)}}<a class="trait-selector-senses" data-action="traitSelectorSenses" data-options="senses" data-target="system.senses.special" data-app-title="{{ localize 'DND4E.Senses' }}">{{/if}}
         <span class="subgroup-header label">{{ localize 'DND4E.Senses' }}</span>
+      {{#if (not isPlay)}}
         <i class="fas fa-edit"></i>
       </a>
+      {{/if}}
       <ul class="traits-list senses">
         {{#each senses.special.selected as |v k|}}
         <li class="tag {{k}}">{{v}}</li>
         {{/each}}
       </ul>
     </div>
-    <textarea class="senses-arbitrary no-mono" name="system.senses.notes" data-tooltip="{{localize 'DND4E.OtherNotes'}}" placeholder="{{localize 'DND4E.OtherNotes'}}">{{system.senses.notes}}</textarea>
+    {{/if}}
+    {{#if (and isPlay shouldShowSensesNotes)}}
+    <div class="senses-arbitrary no-mono" data-tooltip="{{localize 'DND4E.OtherNotes'}}">{{system.senses.notes}}</div>
+    {{else if (not isPlay)}}
+    <textarea class="senses-arbitrary no-mono" name="source.system.senses.notes" data-tooltip="{{localize 'DND4E.OtherNotes'}}" placeholder="{{localize 'DND4E.OtherNotes'}}">{{source.system.senses.notes}}</textarea>
+    {{/if}}
   </div>
+  {{/if}}
 </section>

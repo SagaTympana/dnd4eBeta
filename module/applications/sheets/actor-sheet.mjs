@@ -52,6 +52,7 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 			{ dragSelector: ".item-list .item", dropSelector: null },
 		],
 		actions: {
+			toggleMode: ActorSheet4e.#toggleMode,
 			displayActorArt: ActorSheet4e.#onDisplayActorArt,
 			itemSummary: ActorSheet4e.#onItemSummary,
 			cycleSkillProficiency: { handler: ActorSheet4e.#onCycleSkillProficiency, buttons: [0, 2] },
@@ -146,6 +147,44 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 
 	/* -------------------------------------------- */
 
+	/**
+     * Available sheet modes.
+     * @enum {number}
+     */
+	static MODES = Object.freeze({
+		PLAY: 1,
+		EDIT: 2,
+	});
+
+	/* -------------------------------------------------- */
+
+	/**
+	 * The mode the sheet is currently in.
+	 * @type {typeof ActorSheet4e.MODES[keyof typeof ActorSheet4e.MODES]}
+	 * @protected
+	 */
+	_mode = ActorSheet4e.MODES.PLAY;
+
+	/* -------------------------------------------------- */
+
+	/**
+	 * Is this sheet in Play Mode?
+	 * @returns {boolean}
+	 */
+	get isPlayMode() {
+		return this._mode === ActorSheet4e.MODES.PLAY;
+	}
+
+	/**
+     * Is the sheet in edit mode?
+     * @type {boolean}
+     */
+	get isEditMode() {
+		return this._mode === ActorSheet4e.MODES.EDIT;
+	}
+
+	/* -------------------------------------------- */
+
 	_filterHelper(target, listSelector) {
 		const filter = target.value.toUpperCase();
 		const lists = this.element.querySelectorAll(listSelector);
@@ -200,12 +239,12 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 		}
 
 		//Disables and adds warning to input fields that are being modfied by active effects
-		for (const override of this._getAllActorOverrides(["system.details.surges.value"])) {
+		/*for (const override of this._getAllActorOverrides(["system.details.surges.value"])) {
 			html.querySelectorAll(`input[name="${override}"],select[name="${override}"]`).forEach((el) => {
 				el.disabled = true;
 				el.dataset.tooltip = "DND4E.ActiveEffectOverrideWarning";
 			});
-		}
+		}*/
 	}
 
 	_initializeApplicationOptions(options) {
@@ -293,10 +332,35 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 	/* -------------------------------------------- */
 
 	/**
-   * A set of item types that should be prevented from being dropped on this type of actor sheet.
-   * @type {Set<string>}
-   */
+	 * A set of item types that should be prevented from being dropped on this type of actor sheet.
+	 * @type {Set<string>}
+	 */
 	static unsupportedItemTypes = new Set();
+
+	/* -------------------------------------------------- */
+
+	/** @inheritdoc */
+	_configureRenderOptions(options) {
+		super._configureRenderOptions(options);
+		if (options.mode && this.isEditable) this._mode = options.mode;
+		// New sheets should always start in edit mode
+		else if (options.renderContext === `create${this.document.documentName}`) this._mode = ActiveEffect4e.MODES.EDIT;
+	}
+
+	/* -------------------------------------------------- */
+
+	/** @inheritdoc */
+	_getFrameButtons(options) {
+		const buttons = super._getFrameButtons(options);
+
+		buttons.push({
+			icon: "fa-solid fa-user-lock",
+			label: "SHEET.ToggleMode",
+			action: "toggleMode",
+		});
+
+		return buttons;
+	}
 
 	/* -------------------------------------------- */
 
@@ -308,12 +372,35 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 		actorData.details.isBloodied = actor.system.details.isBloodied;
 
 		const isOwner = this.actor.isOwner;
+		const shouldShowArmourProf = actor.system.details.armourProf.value.size || actor.system.details.armourProf.custom;
+		const shouldShowImplementProf = actor.system.details.implementProf.value.size || actor.system.details.implementProf.custom;
+		const shouldShowWeaponProf = actor.system.details.weaponProf.value.size || actor.system.details.weaponProf.custom;
+		const shouldShowProficiencies = shouldShowArmourProf || shouldShowImplementProf || shouldShowWeaponProf;
 
-		foundry.utils.mergeObject(context, {
+		const shouldShowScriptLang = actor.system.languages.script.value.size || actor.system.languages.script.custom;
+		const shouldShowSpokenLang = actor.system.languages.spoken.value.size || actor.system.languages.spoken.custom;
+		const shouldShowLanguages = shouldShowScriptLang || shouldShowSpokenLang;
+
+		const shouldShowSpecialSenses = (actor.system.senses.basic !== "blind") || actor.system.senses.allAround || actor.system.senses.custom || Object.values(actor.system.senses.special).some(s => s.value);
+		const shouldShowSensesNotes = actor.system.senses.notes;
+		const shouldShowSenses = shouldShowSpecialSenses || shouldShowSensesNotes;
+
+		Object.assign(context, {
 			owner: isOwner,
 			limited: this.actor.limited,
 			options: this.options,
 			editable: this.isEditable,
+			isPlay: this.isPlayMode,
+			shouldShowArmourProf,
+			shouldShowImplementProf,
+			shouldShowWeaponProf,
+			shouldShowProficiencies,
+			shouldShowScriptLang,
+			shouldShowSpokenLang,
+			shouldShowLanguages,
+			shouldShowSpecialSenses,
+			shouldShowSensesNotes,
+			shouldShowSenses,
 			cssClass: isOwner ? "editable" : "locked",
 			isCharacter: actor.isCharacter,
 			isNPC: actor.isNPC,
@@ -324,8 +411,15 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 			config: CONFIG.DND4E,
 			// rollData: this.actor.getRollData(),
 			actor,
+			systemFields: this.actor.system.schema.fields,
+			detailsFields: this.actor.system.schema.fields.details.fields,
+			surgesFields: this.actor.system.schema.fields.details.fields.surges.fields,
+			abilitiesFields: this.actor.system.schema.fields.abilities.fields,
+			attributesFields: this.actor.system.schema.fields.attributes.fields,
+			hpFields: this.actor.system.schema.fields.attributes.fields.hp.fields,
+			sensesFields: this.actor.system.schema.fields.senses.fields,
 			actorData,
-			system: actorData,
+			system: this.actor.system,
 		});
 
 		context.items = actor.items
@@ -1097,6 +1191,23 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 
 	/* -------------------------------------------- */
 
+	/**
+	 * Toggle Edit vs. Play mode.
+	 *
+	 * @this ActorSheet4e
+	 * @param {PointerEvent} event   The originating click event.
+	 * @param {HTMLElement} target   The capturing HTML element which defined a [data-action].
+	 */
+	static async #toggleMode(event, target) {
+		if (!this.isEditable) {
+			console.error("You can't switch to Edit mode if the sheet is uneditable.");
+			return;
+		}
+		await this.render({ mode: this.isPlayMode ? ActorSheet4e.MODES.EDIT : ActorSheet4e.MODES.PLAY });
+	}
+
+	/* -------------------------------------------- */
+
 	static #onDisplayActorArt() {
 		const p = new foundry.applications.apps.ImagePopout({ src: this.document.img });
 		p.render(true);
@@ -1740,13 +1851,14 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 		}
 		return _loc("DND4E.GoldWealth") + (Math.round(goldSum * 100) / 100).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 	}
+
 	/* -------------------------------------------- */
 
 	/**
-   * Convert all carried currency to the highest possible denomination to reduce the number of raw coins being
-   * carried by an Actor.
-   * @returns {Promise<Actor4e>}
-   */
+	 * Convert all carried currency to the highest possible denomination to reduce the number of raw coins being
+	 * carried by an Actor.
+	 * @returns {Promise<Actor4e>}
+	 */
 	convertCurrency() {
 		const curr = foundry.utils.duplicate(this.actor.system.currency);
 		const convert = CONFIG.DND4E.currencyConversion;

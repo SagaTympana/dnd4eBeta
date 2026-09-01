@@ -2061,12 +2061,17 @@
 "MIGRATION.4eComplete": "DnD4E System Migration to version {version} completed!",
 "MIGRATION.4eVersionTooOldWarning": "Your DnD4e system data is from too old a Foundry version and cannot be reliably migrated to the latest version. The process will be attempted, but errors may occur.",
 
-"SHEET.ActiveEffect": "Active Effect 4e Sheet",
-"SHEET.Character.Basic": "Basic Character Sheet",
-"SHEET.NPC": "NPC Sheet",
-"SHEET.Hazard": "Trap/Hazard Sheet",
-"SHEET.Item": "Item Sheet",
-"SHEET.Token": "Token Sheet",
+"SHEET": {
+	"Labels": {
+		"ActiveEffect": "Active Effect 4e Sheet",
+		"Character.Basic": "Basic Character Sheet",
+		"NPC": "NPC Sheet",
+		"Hazard": "Trap/Hazard Sheet",
+		"Item": "Item Sheet",
+		"Token": "Token Sheet"
+	},
+	"ToggleMode": "Toggle Play/Edit Mode"
+},
 
 "TYPES": {
 	"Actor": {

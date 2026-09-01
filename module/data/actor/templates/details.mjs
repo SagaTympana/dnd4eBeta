@@ -1,14 +1,15 @@
 import { BonusField, Dnd4eBonusesField } from "../fields/_module.mjs";
+import { DND4E } from "../../../config.mjs";
 
-const { BooleanField, NumberField, StringField } = foundry.data.fields;
+const { BooleanField, NumberField, SetField, StringField } = foundry.data.fields;
 
 export default class DetailsField {
 	/** Getter for creature data. */
 	static get creature() {
 		return {
-			size: new StringField({ initial: "med" }, { label: "DND4E.Size" }),
-			origin: new StringField({ initial: "natural" }, { label: "DND4E.CreatureOrigin" }),
-			type: new StringField({ initial: "humanoid" }, { label: "DND4E.Type" }),
+			size: new StringField({ initial: "med", choices: DND4E.actorSizes }, { label: "DND4E.Size" }),
+			origin: new StringField({ initial: "natural", choices: DND4E.creatureOrigin }, { label: "DND4E.CreatureOrigin" }),
+			type: new StringField({ initial: "humanoid", choices: DND4E.creatureType }, { label: "DND4E.Type" }),
 			other: new StringField({ initial: "" }, { label: "DND4E.Other" }),
 			race: new StringField({ initial: "" }, { label: "DND4E.Race" }),
 			age: new StringField({ initial: "" }, { label: "DND4E.Age" }),
