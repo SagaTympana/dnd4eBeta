@@ -59,7 +59,7 @@
         </div>
         <div class="flexrow power-name{{#if item.system.useType}} ability-usage--{{item.system.useType}}{{else}}ability-usage--blank{{/if}}{{#if item.system.notAvailable}} unavailable{{/if}}" data-tooltip="{{item.name}}">
           <div class="item-name flexrow rollable" data-action="itemSummary">
-            <h4 class="power-detail item-title">{{#if item.system.level}}[{{item.system.level}}]{{/if}}{{item.name}}</h4>
+            <h4 class="power-detail item-title">{{#if item.system.level}}[{{item.system.level}}]&#x2009;{{else if item.system.attack.isBasic}}<i class="fa-light fa-circle-b"></i>&#x200A;{{/if}}{{item.name}}</h4>
           </div>
 
           {{#if section.columns}}
