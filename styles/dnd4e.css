@@ -438,6 +438,20 @@ body.theme-light .dnd4e:is(.application,.app):is(.default,.standard-form):not(.t
 			scrollbar-width:thin;
 			scrollbar-gutter:stable;
 		}
+
+		.rituals{
+			.ritual-pages{
+				width:100%;
+				display:block;
+
+				.ritual-pages-label{
+					width:50%;
+					display:block;
+					margin:0 auto;
+					text-align:center;
+				}
+			}
+		}
 	}
 	input::placeholder{
 		opacity:0.4;

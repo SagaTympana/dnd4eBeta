@@ -28,6 +28,40 @@ export default class RitualData extends foundry.abstract.TypeDataModel {
 	}
 
 	/* -------------------------------------------- */
+	/*  Properties                              */
+	/* -------------------------------------------- */
+
+	/**
+	 * Gets this ritual's subtype
+	 * @return {"alchemical"|"martial"|"other"|"ritual"}
+	 */
+	get subtype() {
+		switch (this.category) {
+			case "binding":
+			case "creation":
+			case "deception":
+			case "divination":
+			case "exploration":
+			case "restoration":
+			case "scrying":
+			case "travel":
+			case "warding":
+				return "ritual";
+			case "martial":
+				return "martial";
+			case "curative":
+			case "oil":
+			case "poison":
+			case "volatile":
+			case "alchother":
+				return "alchemical";
+			case "other":
+			default:
+				return "other";
+		}
+	}
+
+	/* -------------------------------------------- */
 	/*  Data Migration                              */
 	/* -------------------------------------------- */
 
