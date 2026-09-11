@@ -104,3 +104,6 @@ When you open an PR it is recommended to [link it to an open issue](https://docs
 ```text
 Closes #32
 ```
+
+### AI Policy
+This project does not make use of "AI" (LLMs/chatbots/generative AI/vibe-coding/etc.), or assets created by such means, in any capacity. We expect all contributors to follow this same policy in their contributions. Contributions made using AI will be rejected without exception.
