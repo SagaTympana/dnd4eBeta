@@ -617,6 +617,8 @@ export default class ActorSheet4e extends foundry.applications.api.HandlebarsApp
 			rituals[r.system.category].items.push(r);
 		}
 
+		data.ritualPages = this.actor.itemTypes.ritual.reduce((pages, r) => pages + ((r.system.subtype === "ritual") && r.system.level) || 0, 0);
+
 		data.inventory = Object.values(inventory);
 		data.powers = Object.values(powers);
 		data.features = Object.values(features);
