@@ -1,5 +1,19 @@
 # Changelog
 
+## Version 0.9.3
+### Upgrades and Enhancements
+* In the powers list, unlevelled basic attacks are now marked with Ⓑ in place of their level (Fox)
+* A PC's Rituals tab now displays the number of pages used at the bottom of the sheet (SagaTympana)
+* Senses have been revised to combine Normal/Low-light/Darkvision/Blind into a single mutually exclusive setting, `senses.basic`. This should clear up any ambiguity about how these senses are intended to be used together (SagaTympana)
+* A new variable, `@maxMod`, is available to use in roll data. This is a quick shorthand for selecting a character's highest ability modifier. (SagaTympana)
+### Bugfixes/Under the Hood
+* Fixed broken Short Rest strings (SagaTympana)
+* Basic attacks which have a letter entered in their level field are now updated during migration to prevent validation errors (Draconas)
+* Added migration for level fields in non-power items (SagaTympana)
+* Resources with no max value, but a designated recharge interval, are now "recharged" to 0 (SagaTympana)
+* Fixed argument passed to `rollAttack` hook (SagaTympana)
+* Fixed a typo in Item sheet name field (Fox)
+
 ## Version 0.9.2
 ### Upgrades and Enhancements
 * Damage/Difficult Terrain/Obscured regions can now overlay a tintable icon on each affected grid square (SagaTympana)
