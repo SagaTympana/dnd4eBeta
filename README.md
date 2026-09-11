@@ -7,6 +7,7 @@
 
 ## **Language Support**
 (Non-English lang files are very outdated since v0.7, and could really use revisions by fluent speakers!)
+- US English
 - Français, courtoisie de [Gilphe](https://github.com/Gilphe)
 - 中文, 由 扶摇
 - Portugues do Brasil, cortesia de [PilotodeMouse](https://github.com/PilotodeMouse)
