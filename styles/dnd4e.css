@@ -800,7 +800,10 @@ body.theme-light .dnd4e:is(.application,.app):is(.default,.standard-form):not(.t
 			overflow:hidden;
 		}
 		.item-range{
-			flex:0 0 68px;
+			flex:0 0 83px;
+		}
+		.item-uses{
+			flex:0 0 53px;
 		}
 		.item-range .range-number{
 			background-color:var(--color-bg-input);
