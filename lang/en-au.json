@@ -1432,7 +1432,8 @@
 				"Attacker": "Hook: Pre Attack Roll - Attacker",
 				"Target": "Hook: Pre Attack Roll - Target"
 			},
-		"HookEvalDef": "Hook: Evaluate Target Defence"
+		"HookEvalDef": "Hook: Evaluate Target Defence",
+		"HookPreDamage": "Hook: Pre Damage Roll"
 	}
 },
 

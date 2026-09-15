@@ -90,6 +90,7 @@ DND4E.macroLaunchOrder = {
 	preAttackAttacker: { label: "DND4E.MACROS.ACTIVATION.HookPreAttack.Attacker" },
 	preAttackTarget: { label: "DND4E.MACROS.ACTIVATION.HookPreAttack.Target" },
 	evalDef: { label: "DND4E.MACROS.ACTIVATION.HookEvalDef" },
+	preDamage: { label: "DND4E.MACROS.ACTIVATION.HookPreDamage" },
 };
 preLocalize("macroLaunchOrder", { keys: ["label"] });
 
