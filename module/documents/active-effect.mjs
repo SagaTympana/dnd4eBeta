@@ -125,6 +125,26 @@ export default class ActiveEffect4e extends ActiveEffect {
 		if (game.settings.get("dnd4e", "dynamicAutomation") && (game.user.id == userId)) this.managePeers("create");
 	}
 
+	/** @inheritDoc */
+	async _preUpdate(changed, opions, userId) {
+		if ("durationType" in changed.system) {
+			const durationType = changed.system.durationType;
+			const duration = {};
+			if (durationType && ("duration" in CONFIG.DND4E.durationType[durationType])) {
+				const durationConfig = CONFIG.DND4E.durationType[durationType].duration;
+				for (const [key, value] of Object.entries(durationConfig)) {
+					duration[key] = value;
+				}
+			} else {
+				duration.value = null;
+				duration.units = "seconds";
+				duration.expiry = null;
+			}
+			changed.duration = duration;
+		}
+
+	}
+
 	/** @inheritdoc */
 	async _onUpdate(changed, options, userId) {
 		await super._onUpdate(changed, options, userId);
