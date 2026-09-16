@@ -2103,6 +2103,11 @@ DND4E.statusEffect = {
 		img: "systems/dnd4e/icons/statusEffects/invisible.svg",
 		description: "EFFECTDESC.invisible",
 	},
+	silent: {
+		name: "EFFECT.statusSilent",
+		img: "icons/svg/silenced.svg",
+		description: "EFFECTDESC.silent",
+	},
 	hidden: {
 		name: "EFFECT.statusHidden",
 		img: "systems/dnd4e/icons/statusEffects/hidden.svg",
@@ -2175,6 +2180,10 @@ DND4E.statusEffect = {
 		description: "EFFECTDESC.mounted",
 	},
 };
+
+DND4E.grantsCA = [
+	"blinded", "dazed", "dominated", "helpless", "restrained", "stunned", "surprised",
+];
 
 // Languages
 DND4E.spoken = {
