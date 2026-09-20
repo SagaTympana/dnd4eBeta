@@ -1,6 +1,5 @@
 import SystemModel4e from "../system-model.mjs";
 import { CollectionField, FormulaField, MappingField } from "../fields/_module.mjs";
-import SourceField from "../fields/source-field.mjs";
 import { ActivatedEffectTemplate, AttackAndDamageTemplate, ItemDescriptionTemplate, ItemMacroTemplate } from "./templates/_module.mjs";
 import { default as PowerBehavior } from "../pseudo-documents/PowerBehaviors/base-power-behavior.mjs";
 import { processPart } from "./_utils.mjs";
