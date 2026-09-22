@@ -1,28 +1,13 @@
 <section class="tab scrollable {{tab.id}}{{#if tab.active}} active{{/if}}" data-group="{{tab.group}}" data-tab="{{tab.id}}">
 
-  {{#if autoanimationsActive}}
-  {{formGroup autoAnimationsField value=source.system.autoanimationsHook localize=true}}
-  {{/if}}
-  {{#each system.macros as |macro i|}}
+  {{#each macros as |macro i|}}
   <fieldset class="collapsible form-group vertical collapsed" data-macro-number="{{@index}}">
     <legend class="fieldset-expand-toggle" data-action="expandMacro">{{localize 'Macro'}} {{@index}} ({{#with (lookup ../config.macroLaunchOrder macro.launchOrder)}}{{label}}{{/with}})</legend>
     <div class="form-group loose">
 
       <div class="form-group loose">
-        <label>{{localize "DND4E.MACROS.ACTIVATION.Label"}}</label>
-        <select name="system.macros.{{@index}}.launchOrder">
-          {{selectOptions ../config.macroLaunchOrder selected=macro.launchOrder labelAttr="label"}}
-        </select>
+        {{formGroup @root.macroFields.launchOrder name=(concat "system.macros." @index ".launchOrder") value=macro.launchOrder localize=true label="DND4E.MACROS.ACTIVATION.Label"}}
       </div>
-
-      {{#unless (lookup @root.shouldHideMacroType @index)}}
-      <div class="form-group loose">
-        <label>{{ localize "Type" }}</label>
-        <select name="system.macros.{{@index}}.type" class="macro-type">
-          {{selectOptions ../config.macroType selected=macro.type labelAttr="label"}}
-        </select>
-      </div>
-      {{/unless}}
 
       <label class="checkbox right">
         <input class="checkbox" type="checkbox" name="system.macros.{{@index}}.enabled" data-dtype="Boolean" {{checked macro.enabled}}>
@@ -46,13 +31,9 @@
     </div>
 
     <div class="form-group stacked macro-text" tabindex="0">
-      <code-mirror name="system.macros.{{@index}}.command" language="{{lookup @root.editorLangs @index}}" tabindex="0">
+      <code-mirror name="system.macros.{{@index}}.command" language="javascript" tabindex="0">
         {{~ macro.command ~}}
       </code-mirror>
-    </div>
-
-    <div class="form-group flexrow">
-      <button class="execute" data-action="executeMacro" type="button" data-macro-index="{{@index}}"><i class="fas fa-dice-d20"></i> {{ localize "MACRO.Execute" }}</button>
     </div>
 
   </fieldset>
